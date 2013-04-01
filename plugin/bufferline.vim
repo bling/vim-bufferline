@@ -1,7 +1,7 @@
 let g:bufferline_active_buffer_left = '['
 let g:bufferline_active_buffer_right = ']'
 let g:bufferline_seperator = ' '
-let g:bufferline_modified = '!'
+let g:bufferline_modified = '+'
 
 function! bufferline#refresh()
     let names = []
@@ -10,10 +10,11 @@ function! bufferline#refresh()
     let current_buffer = bufnr('%')
     while i <= last_buffer
         if bufexists(i) && buflisted(i)
-            let name = i . ':' . fnamemodify(bufname(i), ':t')
+            let modified = ' '
             if getbufvar(i, '&mod')
-                let name .= g:bufferline_modified
+                let modified = g:bufferline_modified
             endif
+            let name = ' ' . i . ':' . fnamemodify(bufname(i), ':t') . modified
 
             if current_buffer == i
                 let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
@@ -27,22 +28,30 @@ function! bufferline#refresh()
     endwhile
 
     echo join(names, '')
+
+    if &updatetime != s:updatetime
+        let &updatetime = s:updatetime
+    endif
 endfunction
 
-function! bufferline#delayrefresh()
-    let s:updatetime = &updatetime
-    if &updatetime != 1
-        let &updatetime = 1
-    endif
+let s:updatetime = &updatetime
+function! bufferline#delayrefresh(updatetime)
+    let &updatetime = a:updatetime
     autocmd bufferline CursorHold *
                 \ call bufferline#refresh() |
                 \ autocmd! bufferline CursorHold
-                \ let &updatetime = s:updatetime
 endfunction
 
 augroup bufferline
     au!
-    autocmd BufWritePost,BufReadPost,BufWipeout,BufWinEnter * call bufferline#delayrefresh()
+
+    " events which output a message which should be immediately overwritten
+    autocmd BufWinEnter,WinEnter * call bufferline#delayrefresh(1)
+
+    " events which output a message, and should update after a delay
+    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#delayrefresh(s:updatetime)
+
+    " events which do not output and can update immediately
     autocmd WinEnter,InsertLeave * call bufferline#refresh()
 augroup END
 
