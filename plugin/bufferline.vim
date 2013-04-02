@@ -3,7 +3,10 @@ let g:bufferline_active_buffer_right = ']'
 let g:bufferline_seperator = ' '
 let g:bufferline_modified = '+'
 
-function! bufferline#refresh()
+" keep track of vimrc setting
+let s:updatetime = &updatetime
+
+function! bufferline#print()
     let names = []
     let i = 1
     let last_buffer = bufnr('$')
@@ -34,11 +37,10 @@ function! bufferline#refresh()
     endif
 endfunction
 
-let s:updatetime = &updatetime
-function! bufferline#delayrefresh(updatetime)
+function! bufferline#refresh(updatetime)
     let &updatetime = a:updatetime
     autocmd bufferline CursorHold *
-                \ call bufferline#refresh() |
+                \ call bufferline#print() |
                 \ autocmd! bufferline CursorHold
 endfunction
 
@@ -46,12 +48,9 @@ augroup bufferline
     au!
 
     " events which output a message which should be immediately overwritten
-    autocmd BufWinEnter,WinEnter * call bufferline#delayrefresh(1)
+    autocmd BufWinEnter,WinEnter,InsertLeave * call bufferline#refresh(1)
 
     " events which output a message, and should update after a delay
-    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#delayrefresh(s:updatetime)
-
-    " events which do not output and can update immediately
-    autocmd WinEnter,InsertLeave * call bufferline#refresh()
+    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#refresh(s:updatetime)
 augroup END
 
