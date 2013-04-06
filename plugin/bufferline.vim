@@ -30,7 +30,10 @@ function! bufferline#print()
         let i += 1
     endwhile
 
-    echo join(names, '')
+    let line = join(names, '')
+    if strlen(line) < winwidth(0)
+        echo line
+    endif
 
     if &updatetime != s:updatetime
         let &updatetime = s:updatetime
