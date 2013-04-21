@@ -6,6 +6,8 @@ let g:bufferline_modified = '+'
 " keep track of vimrc setting
 let s:updatetime = &updatetime
 
+let s:current_line = ''
+
 function! bufferline#print()
     let names = []
     let i = 1
@@ -32,7 +34,10 @@ function! bufferline#print()
 
     let line = join(names, '')
     if strlen(line) < winwidth(0)
-        echo line
+        if line != s:current_line
+            echo line
+            let s:current_line = line
+        endif
     endif
 
     if &updatetime != s:updatetime
