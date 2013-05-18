@@ -9,56 +9,62 @@ let s:updatetime = &updatetime
 let s:current_line = ''
 
 function! bufferline#print()
-    let names = []
-    let i = 1
-    let last_buffer = bufnr('$')
-    let current_buffer = bufnr('%')
-    while i <= last_buffer
-        if bufexists(i) && buflisted(i)
-            let modified = ' '
-            if getbufvar(i, '&mod')
-                let modified = g:bufferline_modified
-            endif
-            let name = ' ' . i . ':' . fnamemodify(bufname(i), ':t') . modified
+  let line = ''
+  let i = 1
+  let last_buffer = bufnr('$')
+  let current_buffer = bufnr('%')
+  while i <= last_buffer
+    if bufexists(i) && buflisted(i)
+      let modified = ' '
+      if getbufvar(i, '&mod')
+        let modified = g:bufferline_modified
+      endif
+      let fname = fnamemodify(bufname(i), ":t")
+      let fname = substitute(fname, "%", "%%", "g")
+      let name = ' ' . i . ':' . fname . modified
 
-            if current_buffer == i
-                let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
-            else
-                let name = g:bufferline_seperator . name . g:bufferline_seperator
-            endif
+      if current_buffer == i
+        let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
+      else
+        let name = g:bufferline_seperator . name . g:bufferline_seperator
+      endif
 
-            call add(names, name)
-        endif
-        let i += 1
-    endwhile
-
-    let line = join(names, '')
-    if strlen(line) < winwidth(0)
-        if line != s:current_line
-            echo line
-            let s:current_line = line
-        endif
+      let line = line . name
     endif
+    let i += 1
+  endwhile
 
-    if &updatetime != s:updatetime
-        let &updatetime = s:updatetime
-    endif
+  " generate the list by zigzagging from the middle to account for when the window size is not large enough
+  " 12 is magical and is the threshold for when it doesn't wrap text anymore
+  let width = winwidth(0) - 12
+  while width < strlen(line)
+    let line = strpart(line, 1, strlen(line) - 2)
+  endwhile
+
+  echo line
+
+  if &updatetime != s:updatetime
+    let &updatetime = s:updatetime
+  endif
+endfunction
+
+function! bufferline#cursorhold_callback()
+  call bufferline#print()
+  autocmd! bufferline CursorHold
 endfunction
 
 function! bufferline#refresh(updatetime)
-    let &updatetime = a:updatetime
-    autocmd bufferline CursorHold *
-                \ call bufferline#print() |
-                \ autocmd! bufferline CursorHold
+  let &updatetime = a:updatetime
+  autocmd bufferline CursorHold * call bufferline#cursorhold_callback()
 endfunction
 
 augroup bufferline
-    au!
+  au!
 
-    " events which output a message which should be immediately overwritten
-    autocmd BufWinEnter,WinEnter,InsertLeave * call bufferline#refresh(1)
+  " events which output a message which should be immediately overwritten
+  autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call bufferline#refresh(1)
 
-    " events which output a message, and should update after a delay
-    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#refresh(s:updatetime)
+  " events which output a message, and should update after a delay
+  autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#refresh(s:updatetime)
 augroup END
 
