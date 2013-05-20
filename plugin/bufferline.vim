@@ -6,10 +6,8 @@ let g:bufferline_modified = '+'
 " keep track of vimrc setting
 let s:updatetime = &updatetime
 
-let s:current_line = ''
-
-function! bufferline#print()
-  let line = ''
+function! bufferline#generate_names()
+  let names = []
   let i = 1
   let last_buffer = bufnr('$')
   let current_buffer = bufnr('%')
@@ -29,17 +27,26 @@ function! bufferline#print()
         let name = g:bufferline_seperator . name . g:bufferline_seperator
       endif
 
-      let line = line . name
+      call add(names, name)
     endif
     let i += 1
   endwhile
+  return names
+endfunction
 
-  " generate the list by zigzagging from the middle to account for when the window size is not large enough
+function! bufferline#print()
+  let names = bufferline#generate_names()
+
+  let line = ''
+  for name in names
+    let line .= name
+  endfor
+
   " 12 is magical and is the threshold for when it doesn't wrap text anymore
   let width = winwidth(0) - 12
-  while width < strlen(line)
-    let line = strpart(line, 1, strlen(line) - 2)
-  endwhile
+  if strlen(line) >= width
+    let line = strpart(line, 0, width)
+  endif
 
   echo line
 
