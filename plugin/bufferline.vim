@@ -66,7 +66,7 @@ function! bufferline#generate_string()
   let names = s:generate_names()
 
   " force active buffer to be second in line always and wrap the others
-  if g:bufferline_rotate
+  if g:bufferline_rotate && len(names) > 1
     let current = bufnr('%')
     while names[1][0] != current
       let first = remove(names, 0)
