@@ -18,10 +18,14 @@ if !exists('g:bufferline_echo')
   let g:bufferline_echo=1
 endif
 
+if !exists('g:bufferline_rotate')
+  let g:bufferline_rotate=0
+endif
+
 " keep track of vimrc setting
 let s:updatetime = &updatetime
 
-function! bufferline#generate_names()
+function! s:generate_names()
   let names = []
   let i = 1
   let last_buffer = bufnr('$')
@@ -50,7 +54,7 @@ function! bufferline#generate_names()
 endfunction
 
 function! bufferline#generate_string()
-  let names = bufferline#generate_names()
+  let names = s:generate_names()
 
   let line = ''
   for name in names
@@ -60,7 +64,7 @@ function! bufferline#generate_string()
   return line
 endfunction
 
-function! bufferline#print()
+function! s:echo()
   let line = bufferline#generate_string()
 
   " 12 is magical and is the threshold for when it doesn't wrap text anymore
@@ -76,14 +80,14 @@ function! bufferline#print()
   endif
 endfunction
 
-function! bufferline#cursorhold_callback()
-  call bufferline#print()
+function! s:cursorhold_callback()
+  call s:echo()
   autocmd! bufferline CursorHold
 endfunction
 
-function! bufferline#refresh(updatetime)
+function! s:refresh(updatetime)
   let &updatetime = a:updatetime
-  autocmd bufferline CursorHold * call bufferline#cursorhold_callback()
+  autocmd bufferline CursorHold * call s:cursorhold_callback()
 endfunction
 
 if g:bufferline_echo
@@ -91,9 +95,9 @@ if g:bufferline_echo
     au!
 
     " events which output a message which should be immediately overwritten
-    autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call bufferline#refresh(1)
+    autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call s:refresh(1)
 
     " events which output a message, and should update after a delay
-    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#refresh(s:updatetime)
+    autocmd BufWritePost,BufReadPost,BufWipeout * call s:refresh(s:updatetime)
   augroup END
 endif
