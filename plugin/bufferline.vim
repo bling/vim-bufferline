@@ -63,11 +63,16 @@ function! s:generate_names()
 endfunction
 
 function! bufferline#generate_string()
+  " check for special cases like help files
+  let current = bufnr('%')
+  if !bufexists(current) || !buflisted(current)
+    return bufname('%')
+  endif
+
   let names = s:generate_names()
 
   " force active buffer to be second in line always and wrap the others
   if g:bufferline_rotate && len(names) > 1
-    let current = bufnr('%')
     while names[1][0] != current
       let first = remove(names, 0)
       call add(names, first)
