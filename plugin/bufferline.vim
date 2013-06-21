@@ -1,3 +1,8 @@
+if exists('g:bufferline_loaded')
+  finish
+endif
+let g:bufferline_loaded = 1
+
 if !exists('g:bufferline_active_buffer_left')
   let g:bufferline_active_buffer_left = '['
 endif
