@@ -28,11 +28,17 @@ if !exists('g:bufferline_show_bufnr')
 endif
 
 if !exists('g:bufferline_rotate')
+  " 0: no rotate, no scrolling
+  " 1: scrolling with fixed current buffer position
+  " 2: scrolling without fixed current buffer position
   let g:bufferline_rotate=0
 endif
 
 " keep track of vimrc setting
 let s:updatetime = &updatetime
+
+" keep track of scrollinf window start
+let s:window_start = 0
 
 function! s:generate_names()
   let names = []
@@ -77,7 +83,7 @@ function! bufferline#generate_string()
   let names = s:generate_names()
 
   " force active buffer to be second in line always and wrap the others
-  if g:bufferline_rotate && len(names) > 1
+  if g:bufferline_rotate == 1 && len(names) > 1
     while names[1][0] != current
       let first = remove(names, 0)
       call add(names, first)
@@ -97,7 +103,17 @@ function! s:echo()
 
   " 12 is magical and is the threshold for when it doesn't wrap text anymore
   let width = winwidth(0) - 12
-  if strlen(line) >= width
+  if g:bufferline_rotate == 2
+    let current_buffer_start = stridx(line, g:bufferline_active_buffer_left)
+    let current_buffer_end = stridx(line, g:bufferline_active_buffer_right)
+    if current_buffer_start < s:window_start
+      let s:window_start = current_buffer_start
+    endif
+    if current_buffer_end > (s:window_start + width)
+      let s:window_start = current_buffer_end - width + 1
+    endif
+    let line = strpart(line, s:window_start, width)
+  else
     let line = strpart(line, 0, width)
   endif
 
