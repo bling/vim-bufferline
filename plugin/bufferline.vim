@@ -27,6 +27,10 @@ if !exists('g:bufferline_show_bufnr')
   let g:bufferline_show_bufnr=1
 endif
 
+if !exists('g:bufferline_fname_mod')
+  let g:bufferline_fname_mod=':t'
+endif
+
 if !exists('g:bufferline_rotate')
   " 0: no rotate, no scrolling
   " 1: scrolling with fixed current buffer position
@@ -51,7 +55,7 @@ function! s:generate_names()
       if getbufvar(i, '&mod')
         let modified = g:bufferline_modified
       endif
-      let fname = fnamemodify(bufname(i), ":t")
+      let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
       let fname = substitute(fname, "%", "%%", "g")
 
       let name = ''
