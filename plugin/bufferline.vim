@@ -1,7 +1,7 @@
 if exists('g:loaded_bufferline')
   finish
 endif
-let g:loaded_bufferline
+let g:loaded_bufferline = 1
 
 function! s:check_defined(variable, default)
   if !exists(a:variable)
