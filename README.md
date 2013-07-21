@@ -12,7 +12,7 @@ by default this plugin will print out the list of buffers into the command bar, 
 
 ```
 let g:bufferline_echo=0
-set statusline=%{bufferline#generate_string()}
+set statusline=%{bufferline#get_status_string()}
 ```
 
 # credits

@@ -34,10 +34,20 @@ function! s:generate_names()
     endif
     let i += 1
   endwhile
+
+  " force active buffer to be second in line always and wrap the others
+  if g:bufferline_rotate == 1 && len(names) > 1
+    let current = bufnr('%')
+    while names[1][0] != current
+      let first = remove(names, 0)
+      call add(names, first)
+    endwhile
+  endif
+
   return names
 endfunction
 
-function! bufferline#generate_string()
+function! s:get_echo_string()
   " check for special cases like help files
   let current = bufnr('%')
   if !bufexists(current) || !buflisted(current)
@@ -45,15 +55,6 @@ function! bufferline#generate_string()
   endif
 
   let names = s:generate_names()
-
-  " force active buffer to be second in line always and wrap the others
-  if g:bufferline_rotate == 1 && len(names) > 1
-    while names[1][0] != current
-      let first = remove(names, 0)
-      call add(names, first)
-    endwhile
-  endif
-
   let line = ''
   for val in names
     let line .= val[1]
@@ -63,7 +64,7 @@ function! bufferline#generate_string()
 endfunction
 
 function! s:echo()
-  let line = bufferline#generate_string()
+  let line = s:get_echo_string()
 
   " 12 is magical and is the threshold for when it doesn't wrap text anymore
   let width = winwidth(0) - 12
@@ -93,7 +94,7 @@ function! s:cursorhold_callback()
   autocmd! bufferline CursorHold
 endfunction
 
-function! bufferline#refresh(updatetime)
+function! s:refresh(updatetime)
   let &updatetime = a:updatetime
   autocmd bufferline CursorHold * call s:cursorhold_callback()
 endfunction
@@ -103,9 +104,9 @@ function! bufferline#init_echo()
     au!
 
     " events which output a message which should be immediately overwritten
-    autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call bufferline#refresh(1)
+    autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call s:refresh(1)
 
     " events which output a message, and should update after a delay
-    autocmd BufWritePost,BufReadPost,BufWipeout * call bufferline#refresh(s:updatetime)
+    autocmd BufWritePost,BufReadPost,BufWipeout * call s:refresh(s:updatetime)
   augroup END
 endfunction

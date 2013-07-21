@@ -22,6 +22,14 @@ call s:check_defined('g:bufferline_fname_mod', ':t')
 " 2: scrolling without fixed current buffer position
 call s:check_defined('g:bufferline_rotate', 0)
 
+function! bufferline#generate_string()
+  return "bufferline#generate_string() is obsolete! Please consult README."
+endfunction
+
+function! bufferline#get_status_string()
+  return 'TODO'
+endfunction
+
 if g:bufferline_echo
   call bufferline#init_echo()
 endif
