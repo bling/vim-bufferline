@@ -1,0 +1,85 @@
+*bufferline.txt*  Simple plugin for generating buffer list names
+
+==============================================================================
+INTRODUCTION                                                    *bufferline*
+
+vim-bufferline is a simple plugin that helps you keep track of all your open
+buffers.  It also integrates nicely with vim-airline.
+
+==============================================================================
+CONFIGURATION                                     *bufferline-configuration*
+
+There are a couple configuration values available (shown with their default
+values):
+
+* denotes whether bufferline should automatically echo to the command bar
+>
+  let g:bufferline_echo = 1
+<
+
+* the separator used on the left side of a buffer
+>
+  let g:bufferline_active_buffer_left = '['
+<
+
+* the separator used on the right side of a buffer
+>
+  let g:bufferline_active_buffer_right = ']'
+<
+
+* the symbol to denote that a buffer is modified
+>
+  let g:bufferline_modified = '+'
+<
+
+* denotes whether buffer numbers should be displayed
+>
+  let g:bufferline_show_bufnr = 1
+<
+
+* denotes how to display the filename of a buffer (see |filename-modifiers|
+  for more details)
+>
+  let g:bufferline_fname_mod = ':t'
+<
+
+* denotes the highlight group for inactive buffers when used in the
+  |statusline|
+>
+  let g:bufferline_inactive_highlight = 'StatusLineNC'
+<
+
+* denotes the highlight group for the active buffer when used in the
+  |statusline|
+>
+  let g:bufferline_active_highlight = 'StatusLine'
+<
+
+==============================================================================
+STATUSLINE INTEGRATION                               *bufferline-statusline*
+
+>
+  let g:bufferline_echo = 0
+  let &statusline='%{bufferline#refresh_status()}'
+  let &statusline.=bufferline#get_status_string()
+<
+
+The function refresh_status() returns an empty string and only exists to
+populate some global variables.  Since it is inside an %{} block, the
+variables will get updated whenever the statusline needs to be drawn.
+get_status_string() creates a string which references these variables.
+
+==============================================================================
+CONTRIBUTIONS                                     *bufferline-contributions*
+
+Contributions and pull requests are welcome.
+
+==============================================================================
+LICENSE                                                 *bufferline-license*
+
+Copyright © Bailey Ling.
+
+Distributed under the same terms as the vim |license|.
+
+
+ vim:tw=78:ts=8:ft=help:norl:
