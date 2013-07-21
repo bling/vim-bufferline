@@ -3,40 +3,24 @@ if exists('g:bufferline_loaded')
 endif
 let g:bufferline_loaded = 1
 
-if !exists('g:bufferline_active_buffer_left')
-  let g:bufferline_active_buffer_left = '['
-endif
+function! s:check_defined(variable, default)
+  if !exists(a:variable)
+    let {a:variable} = a:default
+  endif
+endfunction
 
-if !exists('g:bufferline_active_buffer_right')
-  let g:bufferline_active_buffer_right = ']'
-endif
+call s:check_defined('g:bufferline_active_buffer_left', '[')
+call s:check_defined('g:bufferline_active_buffer_right', ']')
+call s:check_defined('g:bufferline_separator', ' ')
+call s:check_defined('g:bufferline_modified', '+')
+call s:check_defined('g:bufferline_echo', 1)
+call s:check_defined('g:bufferline_show_bufnr', 1)
+call s:check_defined('g:bufferline_fname_mod', ':t')
 
-if !exists('g:bufferline_seperator')
-  let g:bufferline_seperator = ' '
-endif
-
-if !exists('g:bufferline_modified')
-  let g:bufferline_modified = '+'
-endif
-
-if !exists('g:bufferline_echo')
-  let g:bufferline_echo=1
-endif
-
-if !exists('g:bufferline_show_bufnr')
-  let g:bufferline_show_bufnr=1
-endif
-
-if !exists('g:bufferline_fname_mod')
-  let g:bufferline_fname_mod=':t'
-endif
-
-if !exists('g:bufferline_rotate')
-  " 0: no rotate, no scrolling
-  " 1: scrolling with fixed current buffer position
-  " 2: scrolling without fixed current buffer position
-  let g:bufferline_rotate=0
-endif
+" 0: no rotate, no scrolling
+" 1: scrolling with fixed current buffer position
+" 2: scrolling without fixed current buffer position
+call s:check_defined('g:bufferline_rotate', 0)
 
 " keep track of vimrc setting
 let s:updatetime = &updatetime
@@ -67,7 +51,7 @@ function! s:generate_names()
       if current_buffer == i
         let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
       else
-        let name = g:bufferline_seperator . name . g:bufferline_seperator
+        let name = g:bufferline_separator . name . g:bufferline_separator
       endif
 
       call add(names, [i, name])
