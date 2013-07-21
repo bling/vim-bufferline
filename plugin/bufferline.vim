@@ -16,6 +16,8 @@ call s:check_defined('g:bufferline_modified', '+')
 call s:check_defined('g:bufferline_echo', 1)
 call s:check_defined('g:bufferline_show_bufnr', 1)
 call s:check_defined('g:bufferline_fname_mod', ':t')
+call s:check_defined('g:bufferline_inactive_highlight', 'StatusLineNC')
+call s:check_defined('g:bufferline_active_highlight', 'StatusLine')
 
 " 0: no rotate, no scrolling
 " 1: scrolling with fixed current buffer position
@@ -26,8 +28,24 @@ function! bufferline#generate_string()
   return "bufferline#generate_string() is obsolete! Please consult README."
 endfunction
 
+let g:bufferline_status_info = {
+      \ 'before': '',
+      \ 'current': '',
+      \ 'after': '',
+      \ }
+
+function! bufferline#refresh_status()
+  call bufferline#get_echo_string()
+  return ''
+endfunction
 function! bufferline#get_status_string()
-  return 'TODO'
+  return
+        \ '%#'.g:bufferline_inactive_highlight.'#'
+        \.'%{g:bufferline_status_info.before}'
+        \.'%#'.g:bufferline_active_highlight.'#'
+        \.'%{g:bufferline_status_info.current}'
+        \.'%#'.g:bufferline_inactive_highlight.'#'
+        \.'%{g:bufferline_status_info.after}'
 endfunction
 
 if g:bufferline_echo

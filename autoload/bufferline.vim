@@ -26,6 +26,7 @@ function! s:generate_names()
 
       if current_buffer == i
         let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
+        let g:bufferline_status_info.current = name
       else
         let name = g:bufferline_separator . name . g:bufferline_separator
       endif
@@ -47,7 +48,7 @@ function! s:generate_names()
   return names
 endfunction
 
-function! s:get_echo_string()
+function! bufferline#get_echo_string()
   " check for special cases like help files
   let current = bufnr('%')
   if !bufexists(current) || !buflisted(current)
@@ -60,11 +61,14 @@ function! s:get_echo_string()
     let line .= val[1]
   endfor
 
+  let index = match(line, '\V'.g:bufferline_status_info.current)
+  let g:bufferline_status_info.before = strpart(line, 0, index)
+  let g:bufferline_status_info.after = ' '.strpart(line, index + len(g:bufferline_status_info.current))
   return line
 endfunction
 
 function! s:echo()
-  let line = s:get_echo_string()
+  let line = bufferline#get_echo_string()
 
   " 12 is magical and is the threshold for when it doesn't wrap text anymore
   let width = winwidth(0) - 12
