@@ -37,6 +37,13 @@ values):
   let g:bufferline_show_bufnr = 1
 <
 
+* denotes whether the bufferline should have rotation applied
+>
+  let g:bufferline_rotate = 0 " default, no rotate, no scrolling
+  let g:bufferline_rotate = 1 " scrolling with fixed current buffer position
+  let g:bufferline_rotate = 2 " scrolling without fixed current buffer position
+<
+
 * denotes how to display the filename of a buffer (see |filename-modifiers|
   for more details)
 >
@@ -60,8 +67,9 @@ STATUSLINE INTEGRATION                               *bufferline-statusline*
 
 >
   let g:bufferline_echo = 0
-  let &statusline='%{bufferline#refresh_status()}'
-  let &statusline.=bufferline#get_status_string()
+  autocmd VimEnter *
+    \ let &statusline='%{bufferline#refresh_status()}'
+      \ .bufferline#get_status_string()
 <
 
 The function refresh_status() returns an empty string and only exists to
