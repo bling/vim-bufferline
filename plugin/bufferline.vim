@@ -43,7 +43,7 @@ function! bufferline#get_status_string()
         \ '%#'.g:bufferline_inactive_highlight.'#'
         \.'%{g:bufferline_status_info.before}'
         \.'%#'.g:bufferline_active_highlight.'#'
-        \.'%{g:bufferline_status_info.current}'
+        \.' %{g:bufferline_status_info.current} '
         \.'%#'.g:bufferline_inactive_highlight.'#'
         \.'%{g:bufferline_status_info.after}'
 endfunction

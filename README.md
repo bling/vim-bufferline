@@ -4,13 +4,13 @@ Super simple vim plugin to show the list of buffers in the command bar.
 
 # screenshots
 
-#### in the command bar
-
-![img](img/bufferline-command.png)
-
-#### or the statusline
+#### in the statusline
 
 ![img](img/bufferline-status.png)
+
+#### or the command bar
+
+![img](img/bufferline-command.png)
 
 # configuration
 

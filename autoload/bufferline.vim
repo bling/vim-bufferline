@@ -63,7 +63,7 @@ function! bufferline#get_echo_string()
 
   let index = match(line, '\V'.g:bufferline_status_info.current)
   let g:bufferline_status_info.before = strpart(line, 0, index)
-  let g:bufferline_status_info.after = ' '.strpart(line, index + len(g:bufferline_status_info.current))
+  let g:bufferline_status_info.after = strpart(line, index + len(g:bufferline_status_info.current))
   return line
 endfunction
 
