@@ -38,11 +38,7 @@ function! s:generate_names()
 
   " force active buffer to be second in line always and wrap the others
   if g:bufferline_rotate == 1 && len(names) > 1
-    let current = bufnr('%')
-    while names[1][0] != current
-      let first = remove(names, 0)
-      call add(names, first)
-    endwhile
+    call bufferline#algos#fixed_position#modify(names, 1)
   endif
 
   return names
