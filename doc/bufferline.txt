@@ -39,9 +39,17 @@ values):
 
 * denotes whether the bufferline should have rotation applied
 >
-  let g:bufferline_rotate = 0 " default, no rotate, no scrolling
-  let g:bufferline_rotate = 1 " scrolling with fixed current buffer position
-  let g:bufferline_rotate = 2 " scrolling without fixed current buffer position
+  " default, no rotate, no scrolling
+  let g:bufferline_rotate = 0
+
+  " scrolling with fixed current buffer position
+  let g:bufferline_rotate = 1
+
+  " scrolling without fixed current buffer position
+  let g:bufferline_rotate = 2
+
+  " active first, followed up buffers not found in other windows
+  let g:bufferline_rotate = 3
 <
 
 * denotes how to display the filename of a buffer (see |filename-modifiers|

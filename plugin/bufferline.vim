@@ -18,10 +18,6 @@ call s:check_defined('g:bufferline_show_bufnr', 1)
 call s:check_defined('g:bufferline_fname_mod', ':t')
 call s:check_defined('g:bufferline_inactive_highlight', 'StatusLineNC')
 call s:check_defined('g:bufferline_active_highlight', 'StatusLine')
-
-" 0: no rotate, no scrolling
-" 1: scrolling with fixed current buffer position
-" 2: scrolling without fixed current buffer position
 call s:check_defined('g:bufferline_rotate', 0)
 
 function! bufferline#generate_string()

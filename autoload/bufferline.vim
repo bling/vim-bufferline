@@ -36,9 +36,12 @@ function! s:generate_names()
     let i += 1
   endwhile
 
-  " force active buffer to be second in line always and wrap the others
-  if g:bufferline_rotate == 1 && len(names) > 1
-    call bufferline#algos#fixed_position#modify(names, 1)
+  if len(names) > 1
+    if g:bufferline_rotate == 1
+      call bufferline#algos#fixed_position#modify(names, 1)
+    elseif g:bufferline_rotate == 3
+      call bufferline#algos#active_hidden#modify(names)
+    endif
   endif
 
   return names
