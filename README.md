@@ -22,4 +22,4 @@ This was inspired by the [buftabs](http://www.vim.org/scripts/script.php?script_
 
 # license
 
-`:help license`
+MIT License. Copyright (c) 2013 Bailey Ling.
