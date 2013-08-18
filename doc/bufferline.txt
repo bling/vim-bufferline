@@ -69,6 +69,11 @@ values):
 >
   let g:bufferline_active_highlight = 'StatusLine'
 <
+* denotes whether the active highlight should be used when there is only one
+  buffer.
+>
+  let g:bufferline_solo_highlight = 0
+<
 
 ==============================================================================
 STATUSLINE INTEGRATION                               *bufferline-statusline*

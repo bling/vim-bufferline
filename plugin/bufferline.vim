@@ -19,18 +19,27 @@ call s:check_defined('g:bufferline_fname_mod', ':t')
 call s:check_defined('g:bufferline_inactive_highlight', 'StatusLineNC')
 call s:check_defined('g:bufferline_active_highlight', 'StatusLine')
 call s:check_defined('g:bufferline_rotate', 0)
+call s:check_defined('g:bufferline_solo_highlight', 0)
 
 function! bufferline#generate_string()
   return "bufferline#generate_string() is obsolete! Please consult README."
 endfunction
 
 let g:bufferline_status_info = {
+      \ 'count': 0,
       \ 'before': '',
       \ 'current': '',
       \ 'after': '',
       \ }
 
 function! bufferline#refresh_status()
+  if g:bufferline_solo_highlight
+    if g:bufferline_status_info.count == 1
+      exec printf('highlight! link %s %s', g:bufferline_active_highlight, g:bufferline_inactive_highlight)
+    else
+      exec printf('highlight! link %s NONE', g:bufferline_active_highlight)
+    endif
+  endif
   call bufferline#get_echo_string()
   return ''
 endfunction
