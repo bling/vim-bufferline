@@ -18,20 +18,30 @@ function! s:generate_names()
       let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
       let fname = substitute(fname, "%", "%%", "g")
 
-      let name = ''
-      if g:bufferline_show_bufnr
-        let name =  i . ':'
-      endif
-      let name .= fname . modified
+      let skip = 0
+      for ex in g:bufferline_excludes
+        if match(fname, ex) > -1
+          let skip = 1
+          break
+        endif
+      endfor
 
-      if current_buffer == i
-        let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
-        let g:bufferline_status_info.current = name
-      else
-        let name = g:bufferline_separator . name . g:bufferline_separator
-      endif
+      if !skip
+        let name = ''
+        if g:bufferline_show_bufnr
+          let name =  i . ':'
+        endif
+        let name .= fname . modified
 
-      call add(names, [i, name])
+        if current_buffer == i
+          let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
+          let g:bufferline_status_info.current = name
+        else
+          let name = g:bufferline_separator . name . g:bufferline_separator
+        endif
+
+        call add(names, [i, name])
+      endif
     endif
     let i += 1
   endwhile
