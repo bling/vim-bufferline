@@ -49,6 +49,13 @@ values):
   let g:bufferline_rotate = 2
 <
 
+* only valid when `g:bufferline_rotate` is set to 1:
+>
+  let g:bufferline_fixed_index =  0 "always first
+  let g:bufferline_fixed_index =  1 "always second (default)
+  let g:bufferline_fixed_index = -1 "always last
+<
+
 * denotes how to display the filename of a buffer (see |filename-modifiers|
   for more details)
 >
@@ -66,11 +73,13 @@ values):
 >
   let g:bufferline_active_highlight = 'StatusLine'
 <
+
 * denotes whether the active highlight should be used when there is only one
   buffer.
 >
   let g:bufferline_solo_highlight = 0
 <
+
 * denotes any exclude patterns.
 >
   let g:bufferline_excludes = [] "see source for defaults

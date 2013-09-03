@@ -48,7 +48,7 @@ function! s:generate_names()
 
   if len(names) > 1
     if g:bufferline_rotate == 1
-      call bufferline#algos#fixed_position#modify(names, 1)
+      call bufferline#algos#fixed_position#modify(names)
     endif
   endif
 
