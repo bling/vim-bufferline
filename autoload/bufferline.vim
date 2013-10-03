@@ -117,8 +117,7 @@ function! bufferline#init_echo()
 
     " events which output a message which should be immediately overwritten
     autocmd BufWinEnter,WinEnter,InsertLeave,VimResized * call s:refresh(1)
-
-    " events which output a message, and should update after a delay
-    autocmd BufWritePost,BufReadPost,BufWipeout * call s:refresh(s:updatetime)
   augroup END
+
+  autocmd CursorHold * call s:echo()
 endfunction
