@@ -28,7 +28,7 @@ function! s:generate_names()
 
       if !skip
         let name = ''
-        if g:bufferline_show_bufnr
+        if g:bufferline_show_bufnr != 0 && g:bufferline_status_info.count >= g:bufferline_show_bufnr
           let name =  i . ':'
         endif
         let name .= fname . modified
