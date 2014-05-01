@@ -58,7 +58,7 @@ function! s:generate_names()
 
       let names[nameindex][1] = name
 
-      if current_buffer == buffernum && g:bufferline_hide_active_buffer == 1
+      if current_buffer == buffer_num && g:bufferline_hide_active_buffer == 1
         if nameindex == 0
           let names = names[nameindex+1:]
         elseif nameindex == len(names)-1
