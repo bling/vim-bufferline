@@ -38,13 +38,14 @@ function! s:generate_names()
   endif
 
   let nameindex = 0
+  let labelnum = 1
   while nameindex < len(names)
       let buffer_num = names[nameindex][0]
       let fname = names[nameindex][1]
 
       let name = ''
       if g:bufferline_show_bufnr != 0 && g:bufferline_status_info.count >= g:bufferline_show_bufnr
-        let name =  (nameindex+1) . ':'
+        let name =  labelnum . ':'
       endif
       let name .= fname . modified
 
@@ -57,7 +58,19 @@ function! s:generate_names()
 
       let names[nameindex][1] = name
 
+      if current_buffer == buffernum && g:bufferline_hide_active_buffer == 1
+        if nameindex == 0
+          let names = names[nameindex+1:]
+        elseif nameindex == len(names)-1
+          let names = names[:nameindex-1]
+        else
+          let names = names[:nameindex-1] + names[nameindex+1:]
+        endif
+        let nameindex -= 1
+      endif
+
       let nameindex += 1
+      let labelnum += 1
   endwhile
 
   if len(names) > 1
