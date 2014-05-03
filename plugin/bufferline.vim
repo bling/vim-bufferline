@@ -22,6 +22,8 @@ call s:check_defined('g:bufferline_rotate', 0)
 call s:check_defined('g:bufferline_fixed_index', 1)
 call s:check_defined('g:bufferline_solo_highlight', 0)
 call s:check_defined('g:bufferline_excludes', ['\[vimfiler\]'])
+call s:check_defined('g:bufferline_sort_function', 0)
+call s:check_defined('g:bufferline_hide_active_buffer', 0)
 
 function! bufferline#generate_string()
   return "bufferline#generate_string() is obsolete! Please consult README."

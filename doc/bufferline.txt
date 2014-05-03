@@ -80,9 +80,20 @@ values):
   let g:bufferline_solo_highlight = 0
 <
 
+* denotes whether to show an entry for the active buffer.
+>
+  let g:bufferline_hide_active_buffer = 1
+<
+
 * denotes any exclude patterns.
 >
   let g:bufferline_excludes = [] "see source for defaults
+<
+
+* allows you to pass your own sorting function to customize the order of the
+  buffers
+>
+  let g:bufferline_sort_function = 0
 <
 
 ==============================================================================

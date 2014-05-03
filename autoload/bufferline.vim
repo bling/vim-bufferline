@@ -6,16 +6,16 @@ let s:window_start = 0
 
 function! s:generate_names()
   let names = []
-  let i = 1
+  let buffer_num = 1
   let last_buffer = bufnr('$')
   let current_buffer = bufnr('%')
-  while i <= last_buffer
-    if bufexists(i) && buflisted(i)
+  while buffer_num <= last_buffer
+    if bufexists(buffer_num) && buflisted(buffer_num)
       let modified = ' '
-      if getbufvar(i, '&mod')
+      if getbufvar(buffer_num, '&mod')
         let modified = g:bufferline_modified
       endif
-      let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
+      let fname = fnamemodify(bufname(buffer_num), g:bufferline_fname_mod)
       let fname = substitute(fname, "%", "%%", "g")
 
       let skip = 0
@@ -27,23 +27,50 @@ function! s:generate_names()
       endfor
 
       if !skip
-        let name = ''
-        if g:bufferline_show_bufnr != 0 && g:bufferline_status_info.count >= g:bufferline_show_bufnr
-          let name =  i . ':'
-        endif
-        let name .= fname . modified
-
-        if current_buffer == i
-          let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
-          let g:bufferline_status_info.current = name
-        else
-          let name = g:bufferline_separator . name . g:bufferline_separator
-        endif
-
-        call add(names, [i, name])
+        call add(names, [buffer_num, fname])
       endif
     endif
-    let i += 1
+    let buffer_num += 1
+  endwhile
+
+  if g:bufferline_sort_function != ''
+    call sort(names, g:bufferline_sort_function)
+  endif
+
+  let nameindex = 0
+  let labelnum = 1
+  while nameindex < len(names)
+      let buffer_num = names[nameindex][0]
+      let fname = names[nameindex][1]
+
+      let name = ''
+      if g:bufferline_show_bufnr != 0 && g:bufferline_status_info.count >= g:bufferline_show_bufnr
+        let name =  labelnum . ':'
+      endif
+      let name .= fname . modified
+
+      if current_buffer == buffer_num
+        let name = g:bufferline_active_buffer_left . name . g:bufferline_active_buffer_right
+        let g:bufferline_status_info.current = name
+      else
+        let name = g:bufferline_separator . name . g:bufferline_separator
+      endif
+
+      let names[nameindex][1] = name
+
+      if current_buffer == buffer_num && g:bufferline_hide_active_buffer == 1
+        if nameindex == 0
+          let names = names[nameindex+1:]
+        elseif nameindex == len(names)-1
+          let names = names[:nameindex-1]
+        else
+          let names = names[:nameindex-1] + names[nameindex+1:]
+        endif
+        let nameindex -= 1
+      endif
+
+      let nameindex += 1
+      let labelnum += 1
   endwhile
 
   if len(names) > 1
