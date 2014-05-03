@@ -82,7 +82,7 @@ values):
 
 * denotes whether to show an entry for the active buffer.
 >
-  let g:bufferline_hide_active_buffer = 1
+  let g:bufferline_hide_active_buffer = 0
 <
 
 * denotes any exclude patterns.
