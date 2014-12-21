@@ -69,7 +69,7 @@ function! bufferline#get_echo_string()
   endfor
 
   let filename = substitute(g:bufferline_status_info.current, '^\s*\(.\{-}\)\s*$', '\1', '')
-  let index = match(line, '\V\<'.filename.'\>')
+  let index = match(line, '\C\V\<'.filename.'\>')
   let g:bufferline_status_info.count = len(names)
   let g:bufferline_status_info.before = strpart(line, 0, index)
   let g:bufferline_status_info.after = strpart(line, index + len(g:bufferline_status_info.current))
