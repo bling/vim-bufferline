@@ -16,6 +16,9 @@ function! s:generate_names()
         let modified = g:bufferline_modified
       endif
       let fname = fnamemodify(bufname(i), g:bufferline_fname_mod)
+      if g:bufferline_pathshorten != 0
+        let fname = pathshorten(fname)
+      endif
       let fname = substitute(fname, "%", "%%", "g")
 
       let skip = 0

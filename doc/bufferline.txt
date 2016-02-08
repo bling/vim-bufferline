@@ -85,6 +85,11 @@ values):
   let g:bufferline_excludes = [] "see source for defaults
 <
 
+* denotes whether paths in buffer names should be |pathshorten()|-ed.
+>
+  let g:bufferline_pathshorten = 0
+<
+
 ==============================================================================
 STATUSLINE INTEGRATION                               *bufferline-statusline*
 
